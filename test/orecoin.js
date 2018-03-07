@@ -30,5 +30,11 @@ contract('OreCoin', (accounts) => {
       expect(log.args.to).to.equal(accounts[1]);
       expect(log.args.value.toNumber()).to.equal(10);
     });
+
+    it('should not accept negative value', () => {
+      return orecoin.sendCoin(accounts[1], -10, { from: accounts[0] })
+        .then(assert.fail)
+        .catch(assert.ok);
+    });
   });
 });
