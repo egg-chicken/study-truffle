@@ -23,8 +23,12 @@ contract('OreCoin', (accounts) => {
 
     it('should send event', async () => {
       const result = await orecoin.sendCoin(accounts[1], 10, { from: accounts[0] });
-      const events = result.logs.map((log) => log.event);
-      expect(events).to.include('SendCoin');
+      const log = result.logs[0];
+
+      expect(log.event).to.equal('SendCoin');
+      expect(log.args.from).to.equal(accounts[0]);
+      expect(log.args.to).to.equal(accounts[1]);
+      expect(log.args.value.toNumber()).to.equal(10);
     });
   });
 });
