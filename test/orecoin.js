@@ -37,4 +37,23 @@ contract('OreCoin', (accounts) => {
         .catch(assert.ok);
     });
   });
+
+  describe('blockAddress', () => {
+    it('should block receiver sending coin', async () => {
+      await orecoin.blockAddress(accounts[1], { from: accounts[0] });
+      return orecoin.sendCoin(accounts[1], 10, { from: accounts[0] })
+        .then(assert.fail)
+        .catch(assert.ok);
+    });
+  });
+
+  describe('unblockAddress', () => {
+    it('should remove it from blocked_addresses', async () => {
+      await orecoin.blockAddress(accounts[1], { from: accounts[0] });
+      await orecoin.unblockAddress(accounts[1], { from: accounts[0] });
+      await orecoin.sendCoin(accounts[1], 10, { from: accounts[0] });
+      const balance = await orecoin.getBalance.call(accounts[1]);
+      expect(balance.toNumber()).to.equal(10);
+    });
+  });
 });
