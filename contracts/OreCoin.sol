@@ -21,5 +21,7 @@ contract OreCoin {
         SendCoin(msg.sender, to, value);
     }
 
+    function getBalance(address addr) public view returns (uint value) {
+        return balances[addr];
     }
 }
