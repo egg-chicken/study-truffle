@@ -56,4 +56,15 @@ contract('OreCoin', (accounts) => {
       expect(balance.toNumber()).to.equal(10);
     });
   });
+
+  describe('setRabateRates', () => {
+    it('should rebate when sender set rebate_rates', async () => {
+      await orecoin.setRebateRates(40, { from: accounts[0] });
+      await orecoin.sendCoin(accounts[1], 100, { from: accounts[0] });
+      const sender = await orecoin.balances.call(accounts[0]);
+      const receiver = await orecoin.balances.call(accounts[1]);
+      expect(sender.toNumber()).to.equal(9940);
+      expect(receiver.toNumber()).to.equal(60);
+    });
+  });
 });
