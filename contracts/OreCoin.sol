@@ -37,7 +37,7 @@ contract OreCoin is Owned {
         blocked_addresses[addr] = -1;
     }
 
-    function setDiscountRates(uint rate) public {
+    function setDiscountRates(uint rate) onlyOwner public {
         require(rate <= 100);
         discount_rates[msg.sender] = rate;
     }
