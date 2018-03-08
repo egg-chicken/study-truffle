@@ -6,7 +6,7 @@ contract OreCoin is Owned {
     string public token_name;
     string public token_symbol;
     mapping (address => uint) public balances;
-    mapping (address => uint) public rebate_rates;
+    mapping (address => uint) public discount_rates;
     mapping (address => int8) public blocked_addresses;
 
     event SendCoin(address indexed from, address indexed to, uint value);
@@ -22,7 +22,7 @@ contract OreCoin is Owned {
         require(blocked_addresses[to] <= 0);
         require(blocked_addresses[msg.sender] <= 0);
 
-        value = value - (value * rebate_rates[msg.sender] / 100);
+        value = value - (value * discount_rates[msg.sender] / 100);
 
         balances[msg.sender] -= value;
         balances[to] += value;
@@ -37,8 +37,8 @@ contract OreCoin is Owned {
         blocked_addresses[addr] = -1;
     }
 
-    function setRebateRates(uint rate) public {
+    function setDiscountRates(uint rate) public {
         require(rate <= 100);
-        rebate_rates[msg.sender] = rate;
+        discount_rates[msg.sender] = rate;
     }
 }

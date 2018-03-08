@@ -58,8 +58,8 @@ contract('OreCoin', (accounts) => {
   });
 
   describe('setRabateRates', () => {
-    it('should rebate when sender set rebate_rates', async () => {
-      await orecoin.setRebateRates(40, { from: accounts[0] });
+    it('should discount when sender set discount_rates', async () => {
+      await orecoin.setDiscountRates(40, { from: accounts[0] });
       await orecoin.sendCoin(accounts[1], 100, { from: accounts[0] });
       const sender = await orecoin.balances.call(accounts[0]);
       const receiver = await orecoin.balances.call(accounts[1]);
