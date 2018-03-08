@@ -4,7 +4,7 @@ contract('OreCoin', (accounts) => {
   let orecoin;
 
   beforeEach(async () => {
-    orecoin = await OreCoin.deployed();
+    orecoin = await OreCoin.new(10000, 'orecoin', 'oc');
   });
 
   it('should put 10000 oc in the first account', async () => {
