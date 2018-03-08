@@ -1,19 +1,17 @@
 pragma solidity ^0.4.17;
 
-contract OreCoin {
+import "./Owned.sol";
+
+contract OreCoin is Owned {
     string public token_name;
     string public token_symbol;
-    address public owner;
     mapping (address => uint) public balances;
     mapping (address => uint) public rebate_rates;
     mapping (address => int8) public blocked_addresses;
 
     event SendCoin(address indexed from, address indexed to, uint value);
 
-    modifier onlyOwner() { require(msg.sender == owner); _; }
-
     function OreCoin(uint total_supply, string _token_name, string _token_symbol) public {
-        owner = msg.sender;
         balances[owner] = total_supply;
         token_name = _token_name;
         token_symbol = _token_symbol;
