@@ -28,10 +28,6 @@ contract OreCoin {
         SendCoin(msg.sender, to, value);
     }
 
-    function getBalance(address addr) public view returns (uint value) {
-        return balances[addr];
-    }
-
     function blockAddress(address addr) onlyOwner public {
         blocked_addresses[addr] = 1;
     }
