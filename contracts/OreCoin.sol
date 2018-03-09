@@ -1,13 +1,14 @@
 pragma solidity ^0.4.17;
 
 import "./Owned.sol";
+import "./Members.sol";
 
 contract OreCoin is Owned {
     string public token_name;
     string public token_symbol;
     mapping (address => uint) public balances;
-    mapping (address => uint) public discount_rates;
     mapping (address => int8) public blocked_addresses;
+    mapping (address => Members) public members_map;
 
     event SendCoin(address indexed from, address indexed to, uint value);
 
@@ -22,7 +23,7 @@ contract OreCoin is Owned {
         require(blocked_addresses[to] <= 0);
         require(blocked_addresses[msg.sender] <= 0);
 
-        value = value - (value * discount_rates[msg.sender] / 100);
+        value = discount(to, value);
 
         balances[msg.sender] -= value;
         balances[to] += value;
@@ -37,8 +38,17 @@ contract OreCoin is Owned {
         blocked_addresses[addr] = -1;
     }
 
-    function setDiscountRates(uint rate) onlyOwner public {
-        require(rate <= 100);
-        discount_rates[msg.sender] = rate;
+    function setMembers(address members) public {
+        members_map[msg.sender] = Members(members);
+    }
+
+    function discount(address to, uint value) private returns (uint) {
+        Members members = members_map[to];
+        if(members > address(0)) {
+            uint discountRate = members.getDiscountRate(to);
+            value = value - (value * discountRate / 100);
+            members.addTransactionAmount(to, value);
+        }
+        return value;
     }
 }

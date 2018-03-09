@@ -1,3 +1,4 @@
+const Members = artifacts.require("./Members.sol");
 const OreCoin = artifacts.require("./OreCoin.sol");
 
 contract('OreCoin', (accounts) => {
@@ -57,14 +58,19 @@ contract('OreCoin', (accounts) => {
     });
   });
 
-  describe('setRabateRates', () => {
-    it('should discount when sender set discount_rates', async () => {
-      await orecoin.setDiscountRates(40, { from: accounts[0] });
-      await orecoin.sendCoin(accounts[1], 100, { from: accounts[0] });
-      const sender = await orecoin.balances.call(accounts[0]);
-      const receiver = await orecoin.balances.call(accounts[1]);
-      expect(sender.toNumber()).to.equal(9940);
-      expect(receiver.toNumber()).to.equal(60);
+  describe('discount', () => {
+    it('should discount when sender set discount rate', async () => {
+      const shop = accounts[1];
+      const client = accounts[0];
+
+      const members = await Members.new();
+      await members.pushRank('Bronze', 1, 5, 10);
+      await orecoin.setMembers(members.address, { from: shop });
+      await orecoin.sendCoin(shop, 100, { from: client });
+      await orecoin.sendCoin(shop, 100, { from: client });
+
+      const shopBalance = await orecoin.balances.call(shop);
+      expect(shopBalance.toNumber()).to.equal(190);
     });
   });
 });
