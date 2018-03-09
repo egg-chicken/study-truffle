@@ -44,7 +44,7 @@ contract Members is Owned {
         }
     }
 
-    function getDiscountRate(address memberAddr) view public returns(uint8 discountRate){
+    function getDiscountRate(address memberAddr) view public returns(uint8){
         uint rankIndex = members[memberAddr].rankIndex;
         return ranks[rankIndex].discountRate;
     }
