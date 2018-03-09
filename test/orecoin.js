@@ -63,7 +63,7 @@ contract('OreCoin', (accounts) => {
       const shop = accounts[1];
       const client = accounts[0];
 
-      const members = await Members.new();
+      const members = await Members.new(orecoin.address);
       await members.pushRank('Bronze', 1, 5, 10);
       await orecoin.setMembers(members.address, { from: shop });
       await orecoin.sendCoin(shop, 100, { from: client });

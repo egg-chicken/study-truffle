@@ -4,7 +4,8 @@ contract('Members', (accounts) => {
   let members;
 
   beforeEach(async () => {
-    members = await Members.new();
+    const dummyAddress = accounts[0];
+    members = await Members.new(dummyAddress);
   });
 
   describe('pushRank', () => {

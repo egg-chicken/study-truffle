@@ -5,6 +5,7 @@ import "./Owned.sol";
 contract Members is Owned {
     Rank[] public ranks;
     mapping (address => Member) public members;
+    address coinContract;
 
     struct Member {
         uint transactionCount;
@@ -19,7 +20,8 @@ contract Members is Owned {
         uint8 discountRate;
     }
 
-    function Members() public {
+    function Members(address _coinContract) public {
+        coinContract = _coinContract;
         pushRank('Default', 0, 0, 0);
     }
 
@@ -32,6 +34,8 @@ contract Members is Owned {
     }
 
     function addTransactionAmount(address memberAddr, uint amount) public {
+        require(msg.sender == coinContract);
+
         Member storage member = members[memberAddr];
         member.transactionCount += 1;
         member.transactionAmount += amount;
