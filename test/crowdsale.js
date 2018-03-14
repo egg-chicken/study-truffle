@@ -49,18 +49,18 @@ contract('Crowdsale', (accounts) => {
     });
 
     it('should reward orecoin if crowdsale got the goal', async () => {
-      await initializeContract(1);
+      await initializeContract(2);
       await crowdsale.sendTransaction({from: accounts[1], value: 10000 });
-      await sleep(1);
+      await sleep(2);
       await crowdsale.withdraw({from: accounts[1]});
       const coin = await orecoin.balances.call(accounts[1]);
       expect(coin.toNumber()).to.equal(5000);
     });
 
     it('should return ether if crowdsale did not get the goal', async () => {
-      await initializeContract(1);
+      await initializeContract(2);
       await crowdsale.sendTransaction({from: accounts[2], value: 1000 });
-      await sleep(1);
+      await sleep(2);
       const beforeBalance = web3.eth.getBalance(crowdsale.address);
       await crowdsale.withdraw({from: accounts[2]});
       const coin = await orecoin.balances.call(accounts[2]);

@@ -19,6 +19,8 @@ contract Crowdsale is Owned {
         bool withdrew;
     }
 
+    event Fund(address indexed from, uint value, uint reward);
+
     // all argument's unit is wei
     function Crowdsale (uint _fundingGoal,
                         uint _startTime,
@@ -39,6 +41,7 @@ contract Crowdsale is Owned {
         funders[msg.sender].reward += reward;
         fundingTotal += msg.value;
         rewardTotal += reward;
+        Fund(msg.sender, msg.value, reward);
     }
 
     function bonusRate() view private returns(uint) {
