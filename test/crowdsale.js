@@ -8,6 +8,7 @@ const sleep = (waitSeconds) => {
 };
 
 contract('Crowdsale', (accounts) => {
+  const owner = accounts[0];
   let crowdsale;
   let orecoin;
 
@@ -69,6 +70,35 @@ contract('Crowdsale', (accounts) => {
       expect(coin.toNumber()).to.equal(0);
       expect(beforeBalance.toNumber()).to.equal(1000);
       expect(afterBalance.toNumber()).to.equal(0);
+    });
+  });
+
+  describe('withdrawByOwner', () => {
+    it('should fail between crowdsale open', async () => {
+      await initializeContract(1000);
+      return crowdsale.withdrawByOwner().catch(assert.ok);
+    });
+
+    it('should transfer ether if crowdsale got the goal', async () => {
+      const value = web3.toWei(1, 'ether');
+      await initializeContract(2);
+      await crowdsale.sendTransaction({from: accounts[1], value: value });
+      await sleep(2);
+      const beforeEither = Math.ceil(web3.fromWei(web3.eth.getBalance(owner), 'ether'));
+      await crowdsale.withdrawByOwner();
+      const afterEither = Math.ceil(web3.fromWei(web3.eth.getBalance(owner), 'ether'));
+      expect(beforeEither + 1).to.equal(afterEither);
+    });
+
+    it('should return orecoin if crowdsale did not get the goal', async () => {
+      await initializeContract(2);
+      await crowdsale.sendTransaction({from: accounts[1], value: 1000 });
+      await sleep(2);
+      const beforeCoin = await orecoin.balances.call(owner);
+      await crowdsale.withdrawByOwner();
+      const afterCoin = await orecoin.balances.call(owner);
+      expect(beforeCoin.toNumber()).to.equal(5000);
+      expect(afterCoin.toNumber()).to.equal(10000);
     });
   });
 });

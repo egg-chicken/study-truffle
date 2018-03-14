@@ -72,7 +72,7 @@ contract Crowdsale is Owned {
         if (fundingGoal > fundingTotal) {
             orecoin.sendCoin(owner, orecoin.balances(this));
         } else {
-            owner.transfer(funders[msg.sender].fund);
+            owner.transfer(fundingTotal);
         }
     }
 }
