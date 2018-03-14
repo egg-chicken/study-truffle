@@ -54,7 +54,7 @@ contract Crowdsale is Owned {
     }
 
     function withdraw() public {
-        require(endTime > now);
+        require(endTime <= now);
         require(!funders[msg.sender].withdrew);
         funders[msg.sender].withdrew = true;
         if (fundingGoal > fundingTotal) {
@@ -65,7 +65,7 @@ contract Crowdsale is Owned {
     }
 
     function withdrawByOwner() onlyOwner public {
-        require(endTime > now);
+        require(endTime <= now);
         if (fundingGoal > fundingTotal) {
             orecoin.sendCoin(owner, orecoin.balances(this));
         } else {
