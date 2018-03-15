@@ -34,4 +34,15 @@ contract Escrow is Owned {
         seller.transfer(price);
         selfdestruct(owner);
     }
+
+    function cancel () public {
+        require(buyer == msg.sender || seller == msg.sender);
+        if(orecoin.balances(this) == amount) {
+            orecoin.sendCoin(seller, amount);
+        }
+        if(this.balance == price) {
+            buyer.transfer(price);
+        }
+        selfdestruct(owner);
+    }
 }

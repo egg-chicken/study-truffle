@@ -35,4 +35,17 @@ contract('Escrow', (accounts) => {
       expect(beforeEither + 1).to.equal(afterEither);
     });
   });
+
+  describe('cancel', () => {
+    it('should return coin and ether', async () => {
+      const beforeEither = Math.ceil(web3.fromWei(web3.eth.getBalance(accounts[1]), 'ether'));
+      await orecoin.sendCoin(escrow.address, 7000);
+      await escrow.sendTransaction({ from: accounts[1], value: oneEther });
+      await escrow.cancel();
+      const afterEither = Math.ceil(web3.fromWei(web3.eth.getBalance(accounts[1]), 'ether'));
+      const sellerCoin = await orecoin.balances(accounts[0]);
+      expect(sellerCoin.toNumber()).to.equal(10000);
+      expect(beforeEither).to.equal(afterEither);
+    });
+  });
 });
